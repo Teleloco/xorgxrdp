@@ -2484,7 +2484,7 @@ rdpClientConSendPaintRectShmEx(rdpPtr dev, rdpClientCon *clientCon,
         out_uint16_le(s, cy);
     }
 
-    out_uint32_le(s, 0);
+    out_uint32_le(s, id->flags);
     clientCon->rect_id++;
     out_uint32_le(s, clientCon->rect_id);
     out_uint32_le(s, id->shmem_id);
@@ -2771,6 +2771,7 @@ rdpClientConGetScreenImageRect(rdpPtr dev, rdpClientCon *clientCon,
     id->bpp = clientCon->rdp_bpp;
     id->Bpp = clientCon->rdp_Bpp;
     id->lineBytes = dev->paddedWidthInBytes;
+    id->flags = 0;
     id->pixels = dev->pfbMemory;
     id->shmem_pixels = clientCon->shmemptr;
     id->shmem_id = clientCon->shmemid;
@@ -2788,6 +2789,7 @@ rdpClientConGetPixmapImageRect(rdpPtr dev, rdpClientCon *clientCon,
     id->bpp = clientCon->rdp_bpp;
     id->Bpp = clientCon->rdp_Bpp;
     id->lineBytes = pPixmap->devKind;
+    id->flags = 0;
     id->pixels = (uint8_t *)(pPixmap->devPrivate.ptr);
     id->shmem_pixels = 0;
     id->shmem_id = 0;
