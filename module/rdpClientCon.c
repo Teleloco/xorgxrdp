@@ -892,6 +892,7 @@ rdpStartHelper(rdpPtr dev, rdpClientCon *clientCon)
         close(clientCon->sck);
         close(spair[0]);
         clientCon->sck = spair[1];
+        g_sck_set_non_blocking(clientCon->sck);
         rdpClientConAddEnabledDevice(dev->pScreen, clientCon->sck);
     }
     return 0;
@@ -1144,10 +1145,15 @@ rdpClientConProcessMsgClientInfo(rdpPtr dev, rdpClientCon *clientCon)
     rdpInputKeyboardEvent(dev, 18, (long)(&(clientCon->client_info)),
                           0, 0, 0);
 
-    if (dev->glamor || dev->nvidia)
+    /* if (dev->glamor || dev->nvidia) */
+    /* currently only nvenc and h264 is supported */
+    if (dev->nvidia && (clientCon->client_info.capture_code == 3))
     {
-        rdpStartHelper(dev, clientCon);
-        rdpSendHelperMonitors(dev, clientCon);
+        if (getenv("XRDP_USE_HELPER") != NULL)
+        {
+            rdpStartHelper(dev, clientCon);
+            rdpSendHelperMonitors(dev, clientCon);
+        }
     }
 
     return 0;
