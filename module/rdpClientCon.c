@@ -1147,7 +1147,8 @@ rdpClientConProcessMsgClientInfo(rdpPtr dev, rdpClientCon *clientCon)
 
     /* if (dev->glamor || dev->nvidia) */
     /* currently only nvenc and h264 is supported */
-    if (dev->nvidia && (clientCon->client_info.capture_code == 3))
+    if ((dev->nvidia || dev->glamor) &&
+        (clientCon->client_info.capture_code == 3))
     {
         if (getenv("XRDP_USE_HELPER") != NULL)
         {
