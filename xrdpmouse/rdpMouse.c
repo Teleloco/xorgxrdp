@@ -164,10 +164,8 @@ rdpInputMouse(rdpPtr dev, int msg,
     switch (msg)
     {
         case WM_MOUSEMOVE:
-            /* without the minus 2, strange things happen when dragging
-               past the width or height */
-            pointer->cursor_x = l_bound_by(param1, 0, dev->width - 2);
-            pointer->cursor_y = l_bound_by(param2, 0, dev->height - 2);
+            pointer->cursor_x = l_bound_by(param1, 0, dev->width - 1);
+            pointer->cursor_y = l_bound_by(param2, 0, dev->height - 1);
             PtrAddEvent(pointer);
             break;
         case WM_LBUTTONUP:
