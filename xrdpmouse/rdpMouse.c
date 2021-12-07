@@ -98,16 +98,40 @@ l_bound_by(int val, int low, int high)
 static void
 rdpEnqueueMotion(DeviceIntPtr device, int x, int y)
 {
-    LLOGLN(10, ("rdpEnqueueMotion:"));
-    xf86PostMotionEvent(device, TRUE, 0, 2, x, y);
+    int buttons;
+    int flags;
+    ValuatorMask *mask;
+
+    LLOGLN(0, ("rdpEnqueueMotion: x %d y %d", x, y));
+    buttons = 0;
+    flags = POINTER_SCREEN | POINTER_ABSOLUTE | POINTER_NORAW;
+    mask = valuator_mask_new(2);
+    if (mask != NULL)
+    {
+        valuator_mask_set(mask, 0, x);
+        valuator_mask_set(mask, 1, y);
+        QueuePointerEvents(device, MotionNotify, buttons, flags, mask);
+        valuator_mask_free(&mask);
+    }
 }
 
 /******************************************************************************/
 static void
-rdpEnqueueButton(DeviceIntPtr device, int type, int buttons)
+rdpEnqueueButton(DeviceIntPtr device, int type, int buttons, int x, int y)
 {
-    LLOGLN(10, ("rdpEnqueueButton:"));
-    xf86PostButtonEvent(device, FALSE, buttons, type == ButtonPress, 0, 0);
+    int flags;
+    ValuatorMask *mask;
+
+    LLOGLN(0, ("rdpEnqueueButton: type %d buttons %d", type, buttons));
+    flags = POINTER_SCREEN | POINTER_ABSOLUTE | POINTER_NORAW;
+    mask = valuator_mask_new(2);
+    if (mask != NULL)
+    {
+        valuator_mask_set(mask, 0, x);
+        valuator_mask_set(mask, 1, y);
+        QueuePointerEvents(device, type, buttons, flags, mask);
+        valuator_mask_free(&mask);
+    }
 }
 
 /******************************************************************************/
@@ -136,13 +160,15 @@ PtrAddEvent(rdpPointer *pointer)
             {
                 type = ButtonPress;
                 buttons = i + 1;
-                rdpEnqueueButton(pointer->device, type, buttons);
+                rdpEnqueueButton(pointer->device, type, buttons,
+                                 pointer->cursor_x, pointer->cursor_y);
             }
             else
             {
                 type = ButtonRelease;
                 buttons = i + 1;
-                rdpEnqueueButton(pointer->device, type, buttons);
+                rdpEnqueueButton(pointer->device, type, buttons,
+                                 pointer->cursor_x, pointer->cursor_y);
             }
         }
     }
