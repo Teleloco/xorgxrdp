@@ -102,7 +102,7 @@ rdpEnqueueMotion(DeviceIntPtr device, int x, int y)
     int flags;
     ValuatorMask *mask;
 
-    LLOGLN(0, ("rdpEnqueueMotion: x %d y %d", x, y));
+    LLOGLN(10, ("rdpEnqueueMotion: x %d y %d", x, y));
     buttons = 0;
     flags = POINTER_SCREEN | POINTER_ABSOLUTE | POINTER_NORAW;
     mask = valuator_mask_new(2);
@@ -122,7 +122,7 @@ rdpEnqueueButton(DeviceIntPtr device, int type, int buttons, int x, int y)
     int flags;
     ValuatorMask *mask;
 
-    LLOGLN(0, ("rdpEnqueueButton: type %d buttons %d", type, buttons));
+    LLOGLN(10, ("rdpEnqueueButton: type %d buttons %d", type, buttons));
     flags = POINTER_SCREEN | POINTER_ABSOLUTE | POINTER_NORAW;
     mask = valuator_mask_new(2);
     if (mask != NULL)
