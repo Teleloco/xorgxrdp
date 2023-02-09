@@ -36,7 +36,7 @@ need **nasm** (Netwide Assembler) and the development package for X Window Syste
 **xorg-x11-server-devel** in your distro).
 
 To compile xorgxrdp from a checked out git repository, you would additionally
-need **autoconf**, **automake**, **libtool** and **pkgconfig**.
+need **autoconf**, **automake**, **libtool** and **pkg-config**.
 
 ### Get the source and build it
 
